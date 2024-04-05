@@ -1,0 +1,137 @@
+USE [master]
+GO
+
+CREATE DATABASE [SOM]
+GO
+
+USE [SOM]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[authorities](
+	[username] [nvarchar](50) NOT NULL,
+	[authority] [nvarchar](50) NOT NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Customer](
+	[CustomerID] [int] IDENTITY(1,1) NOT NULL,
+	[FirstName] [nvarchar](25) NOT NULL,
+	[LastName] [nvarchar](50) NOT NULL,
+	[Email] [nvarchar](100) NOT NULL,
+	[Phone] [nvarchar](50) NOT NULL,
+	[Number] [int] NULL,
+ CONSTRAINT [PK_Customer] PRIMARY KEY CLUSTERED 
+(
+	[CustomerID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[OrderDetail](
+	[OrderDetailID] [int] IDENTITY(1,1) NOT NULL,
+	[ProductID] [int] NOT NULL,
+	[Quantity] [int] NOT NULL,
+	[OrderID] [int] NULL,
+	[UnitValue] [money] NULL,
+ CONSTRAINT [PK_OrderDetail] PRIMARY KEY CLUSTERED 
+(
+	[OrderDetailID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[OrderHeader](
+	[OrderID] [int] IDENTITY(1,1) NOT NULL,
+	[OrderNumber] [char](10) NOT NULL,
+	[OrderDate] [date] NOT NULL,
+	[CustomerID] [int] NOT NULL,
+ CONSTRAINT [PK_OrderHeader] PRIMARY KEY CLUSTERED 
+(
+	[OrderID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Product](
+	[ProductID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](100) NOT NULL,
+	[ProductIndex] [nvarchar](6) NOT NULL,
+	[Price] [money] NOT NULL,
+ CONSTRAINT [PK_Product] PRIMARY KEY CLUSTERED 
+(
+	[ProductID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[users](
+	[username] [nvarchar](50) NOT NULL,
+	[password] [nvarchar](68) NOT NULL,
+	[enabled] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[username] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[authorities]  WITH CHECK ADD  CONSTRAINT [FK_Role_User] FOREIGN KEY([username])
+REFERENCES [dbo].[users] ([username])
+GO
+ALTER TABLE [dbo].[authorities] CHECK CONSTRAINT [FK_Role_User]
+GO
+ALTER TABLE [dbo].[OrderDetail]  WITH CHECK ADD  CONSTRAINT [FK_OrderDetail_OrderHeader] FOREIGN KEY([OrderID])
+REFERENCES [dbo].[OrderHeader] ([OrderID])
+GO
+ALTER TABLE [dbo].[OrderDetail] CHECK CONSTRAINT [FK_OrderDetail_OrderHeader]
+GO
+ALTER TABLE [dbo].[OrderDetail]  WITH CHECK ADD  CONSTRAINT [FK_OrderDetail_Product] FOREIGN KEY([ProductID])
+REFERENCES [dbo].[Product] ([ProductID])
+GO
+ALTER TABLE [dbo].[OrderDetail] CHECK CONSTRAINT [FK_OrderDetail_Product]
+GO
+ALTER TABLE [dbo].[OrderHeader]  WITH CHECK ADD  CONSTRAINT [FK_Customer_OrderHeader] FOREIGN KEY([CustomerID])
+REFERENCES [dbo].[Customer] ([CustomerID])
+GO
+ALTER TABLE [dbo].[OrderHeader] CHECK CONSTRAINT [FK_Customer_OrderHeader]
+GO
+
+
+
+-- Default passwords: user123
+
+INSERT INTO [users]
+VALUES 
+('gniewomir','{bcrypt}$2a$10$7GkSz1KiJMEKGtIw/9/xR.Al8r.YXhwz63fU6nYpS4krr1S56GX7O',1),
+('sieciech','{bcrypt}$2a$10$7GkSz1KiJMEKGtIw/9/xR.Al8r.YXhwz63fU6nYpS4krr1S56GX7O',1),
+('alojzy','{bcrypt}$2a$10$7GkSz1KiJMEKGtIw/9/xR.Al8r.YXhwz63fU6nYpS4krr1S56GX7O',1);
+
+INSERT INTO [authorities] 
+VALUES 
+('gniewomir','ROLE_USER'),
+('sieciech','ROLE_USER'),
+('sieciech','ROLE_MANAGER'),
+('alojzy','ROLE_USER'),
+('alojzy','ROLE_MANAGER'),
+('alojzy','ROLE_ADMIN');

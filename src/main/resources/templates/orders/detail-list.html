@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <h2>Order details:</h2>
+    <hr>
+
+    <div> Customer: <span
+            th:text="${#numbers.formatInteger(order.customer.number,6) + ' - ' + order.customer.lastName + ' ' + order.customer.firstName}"></span>
+    </div>
+    <div> Order number: <span th:text="*{order.number}"></span></div>
+    <div> Order date: <span th:text="*{order.date}"></span></div>
+    <br>
+
+    <a href="#" onclick="history.back()"
+       class="btn btn-secondary btn-sm mb-3">
+        Back
+    </a>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Sum</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tempOrderDetail : ${order.orderDetails}">
+            <td th:text="${tempOrderDetail.product.name + ' - ' + tempOrderDetail.product.productIndex }"></td>
+            <td th:text="${#numbers.formatDecimal(tempOrderDetail.value, 1, 'COMMA', 2, 'POINT')}"></td>
+            <td th:text="${tempOrderDetail.quantity}"></td>
+            <td th:text="${#numbers.formatDecimal(tempOrderDetail.quantity*tempOrderDetail.value, 0, 'COMMA', 2, 'POINT')}"></td>
+        </tr>
+        <tr>
+            <td colspan="3"><b>TOTAL:</b></td>
+            <td><span
+                    th:text="${#numbers.formatDecimal(#aggregates.sum(order.orderDetails.![quantity * value]), 1, 'COMMA', 2, 'POINT')}"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <hr>
+
+    <a href="#" onclick="history.back()">Back</a>
+    <br>
+    <a th:href="@{/}">Home page</a>
+</div>
+</body>
+</html>
