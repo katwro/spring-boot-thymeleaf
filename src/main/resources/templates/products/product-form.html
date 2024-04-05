@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container">
+    <h3>Product details</h3>
+    <hr>
+
+    <form action="#" th:action="@{/product/save}"
+          th:object="${product}" method="POST">
+
+        <input type="hidden" th:field="*{id}">
+
+        Product name (*):
+        <div class="form-group">
+            <input maxlength="100" type="text" th:field="*{name}"
+                   class="form-control mb-4 w-25 d-inline-block" placeholder="Product name">
+            <span th:if="${#fields.hasErrors('name')}"
+                  th:errors="*{name}" class="text-danger"></span>
+        </div>
+        Product index (*):
+        <div class="form-group">
+            <input maxlength="6" type="text" th:field="*{productIndex}"
+                   class="form-control mb-4 w-25 d-inline-block" placeholder="Index">
+            <span th:if="${#fields.hasErrors('productIndex')}"
+                  th:errors="*{productIndex}" class="text-danger"></span>
+        </div>
+        Price (*):
+        <div class="form-group">
+            <input type="number" step="0.01" th:field="*{price}"
+                   class="form-control mb-4 w-25 d-inline-block" placeholder="Net price">
+            <span th:if="${#fields.hasErrors('price')}"
+                  th:errors="*{price}" class="text-danger"></span>
+        </div>
+        <br>
+
+        <button type="submit" class="btn btn-info col-2">Save</button>
+
+    </form>
+    <hr>
+
+    <a th:href="@{/product/list}">Back to product list</a>
+    <br>
+    <a th:href="@{/}">Home page</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New order</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <h2>New order</h2>
+    <hr>
+
+    <form action="#" th:action="@{/order/new}" th:object="${order}" method="POST">
+
+        Customer (*):
+        <div class="form-group">
+            <select th:field="*{customer}" class="mb-4 w-25" required>
+                <option value="">Select customer</option>
+                <option th:each="tempCustomer : ${customers}"
+                        th:value="${tempCustomer.id}"
+                        th:text="${#numbers.formatInteger(tempCustomer.number,6) + ' - ' +  tempCustomer.lastName + ' ' + tempCustomer.firstName}"></option>
+            </select>
+        </div>
+        Order date:
+        <div class="form-group">
+            <input type="date" th:field="*{date}" class="mb-4 w-25 d-inline-block"/>
+            <span th:if="${#fields.hasErrors('date')}"
+                  th:errors="*{date}" class="text-danger"></span>
+        </div>
+
+        <button class="btn btn-dark btn-sm col-2" type="submit" name="addProduct">Add product</button>
+
+        <br><br>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Item</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="orderDetail,detailStat : *{orderDetails}">
+                <td th:text="${detailStat.count}">1</td>
+                <td>
+                    <select th:field="*{orderDetails[__${detailStat.index}__].product}" required>
+                        <option value="">Select product</option>
+                        <option th:each="tempProduct : ${products}"
+                                th:value="${tempProduct.id}"
+                                th:text="${tempProduct.productIndex + ' ' + tempProduct.name}"></option>
+                    </select>
+                </td>
+                <td>
+                    <input type="number" min="1" th:field="*{orderDetails[__${detailStat.index}__].quantity}"/>
+                </td>
+                <td>
+                    <button class="btn btn-danger btn-sm" type="submit" name="removeProduct"
+                            th:value="${detailStat.index}"
+                            onclick="document.querySelectorAll('[required]').forEach(field => field.removeAttribute('required'))">
+                        Remove row
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <br><br>
+
+        <button type="submit" name="save" class="btn btn-info col-2">Save order</button>
+
+    </form>
+    <hr>
+
+    <a th:href="@{/order/list}">Back to order list</a>
+    <br>
+    <a th:href="@{/}">Home page</a>
+</div>
+</body>
+</html>
+
+
