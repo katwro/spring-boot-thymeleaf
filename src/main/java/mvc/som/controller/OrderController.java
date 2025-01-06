@@ -92,9 +92,14 @@ public class OrderController {
     }
 
     @GetMapping("/delete")
-    public String delete(@RequestParam("orderId") int id, RedirectAttributes redirectAttributes) {
+    public String delete(@RequestParam("orderId") int id,
+                         @RequestParam(value = "customerId", required = false) Integer customerId,
+                         RedirectAttributes redirectAttributes) {
         orderService.deleteOrderById(id);
         redirectAttributes.addFlashAttribute("success", "The order has been deleted.");
+        if (customerId != null) {
+            return "redirect:/order/list?customerId=" + customerId;
+        }
         return "redirect:/order/list";
     }
 

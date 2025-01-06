@@ -9,6 +9,7 @@
 </head>
 <body>
 <div class="container">
+    <br>
     <h2>New order</h2>
     <hr>
 
@@ -77,6 +78,9 @@
     <a th:href="@{/order/list}">Back to order list</a>
     <br>
     <a th:href="@{/}">Home page</a>
+    <form action="#" th:action="@{/logout}" method="POST">
+        <input class="nav-link" type="submit" value="Logout"/>
+    </form>
 </div>
 </body>
 </html>

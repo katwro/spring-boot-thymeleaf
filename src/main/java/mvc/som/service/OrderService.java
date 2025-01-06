@@ -11,11 +11,15 @@ public interface OrderService {
 
     List<Customer> findAllCustomers();
 
+    List<Customer> searchCustomer(String searchTerm);
+
     List<OrderHeader> findAllOrders();
 
     List<OrderDetail> findAllOrderDetails();
 
     List<Product> findAllProducts();
+
+    List<Product> searchProduct(String searchTerm);
 
     Customer findCustomerById(int id);
 

@@ -10,11 +10,12 @@
 </head>
 <body>
 <div class="container">
+    <br>
     <h4>
         <p>
             User: <span sec:authentication="principal.username"></span>
             <br><br>
-            Role(s): <span sec:authentication="principal.authorities"></span>
+            <span th:text="${@securityConfig.getHighestRole(#authentication)}"></span>
         </p>
     </h4>
 

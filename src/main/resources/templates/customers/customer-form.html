@@ -9,6 +9,7 @@
 </head>
 <body>
 <div class="container">
+    <br>
     <h3>Customer details</h3>
     <hr>
 
@@ -17,7 +18,6 @@
 
         <input type="hidden" th:field="*{id}">
         <input type="hidden" th:field="*{number}">
-
         First name (*):
         <div class="form-group">
             <input maxlength="25" type="text" th:field="*{firstName}"
@@ -55,6 +55,10 @@
     <a th:href="@{/customer/list}">Back to customer list</a>
     <br>
     <a th:href="@{/}">Home page</a>
+    <br>
+    <form action="#" th:action="@{/logout}" method="POST">
+        <input class="nav-link" type="submit" value="Logout"/>
+    </form>
 </div>
 </body>
 </html>

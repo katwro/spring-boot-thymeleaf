@@ -36,5 +36,15 @@ public class Product {
 
     private List<OrderDetail> orderDetails;
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", productIndex='" + productIndex + '\'' +
+                ", price=" + price +
+                '}';
+    }
+
 }
 

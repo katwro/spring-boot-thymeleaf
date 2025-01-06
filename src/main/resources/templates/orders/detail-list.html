@@ -9,6 +9,7 @@
 </head>
 <body>
 <div class="container">
+    <br>
     <h2>Order details:</h2>
     <hr>
 
@@ -36,23 +37,25 @@
         <tbody>
         <tr th:each="tempOrderDetail : ${order.orderDetails}">
             <td th:text="${tempOrderDetail.product.name + ' - ' + tempOrderDetail.product.productIndex }"></td>
-            <td th:text="${#numbers.formatDecimal(tempOrderDetail.value, 1, 'COMMA', 2, 'POINT')}"></td>
+            <td th:text="${#numbers.formatDecimal(tempOrderDetail.unitPrice, 1, 'COMMA', 2, 'POINT')}"></td>
             <td th:text="${tempOrderDetail.quantity}"></td>
-            <td th:text="${#numbers.formatDecimal(tempOrderDetail.quantity*tempOrderDetail.value, 0, 'COMMA', 2, 'POINT')}"></td>
+            <td th:text="${#numbers.formatDecimal(tempOrderDetail.quantity*tempOrderDetail.unitPrice, 1, 'COMMA', 2, 'POINT')}"></td>
         </tr>
         <tr>
             <td colspan="3"><b>TOTAL:</b></td>
             <td><span
-                    th:text="${#numbers.formatDecimal(#aggregates.sum(order.orderDetails.![quantity * value]), 1, 'COMMA', 2, 'POINT')}"></span>
+                    th:text="${#numbers.formatDecimal(#aggregates.sum(order.orderDetails.![quantity * unitPrice]), 1, 'COMMA', 2, 'POINT')}"></span>
             </td>
         </tr>
         </tbody>
     </table>
     <hr>
 
-    <a href="#" onclick="history.back()">Back</a>
-    <br>
     <a th:href="@{/}">Home page</a>
+    <br>
+    <form action="#" th:action="@{/logout}" method="POST">
+        <input class="nav-link" type="submit" value="Logout"/>
+    </form>
 </div>
 </body>
 </html>

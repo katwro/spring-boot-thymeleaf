@@ -5,6 +5,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.logging.Logger;
@@ -15,15 +16,18 @@ public class LoggingAspect {
 
     private Logger logger = Logger.getLogger(getClass().getName());
 
-    @Pointcut("execution(* springboot.mvc.orderregistration.controller.*.*(..))")
+    @Value("${aop.logging.enabled:true}")
+    private boolean loggingEnabled;
+
+    @Pointcut("execution(* mvc.som.controller.*.*(..))")
     private void forControllerPackage() {
     }
 
-    @Pointcut("execution(* springboot.mvc.orderregistration.repository.*.*(..))")
+    @Pointcut("execution(* mvc.som.repository.*.*(..))")
     private void forRepositoryPackage() {
     }
 
-    @Pointcut("execution(* springboot.mvc.orderregistration.service.*.*(..))")
+    @Pointcut("execution(* mvc.som.service.*.*(..))")
     private void forServicePackage() {
     }
 
@@ -33,14 +37,15 @@ public class LoggingAspect {
 
     @Before("forAppFlow()")
     public void before(JoinPoint joinPoint) {
+        if (loggingEnabled) {
+            String method = joinPoint.getSignature().toShortString();
+            logger.info("@Before: calling method: " + method);
 
-        String method = joinPoint.getSignature().toShortString();
-        logger.info("@Before: calling method: " + method);
+            Object[] args = joinPoint.getArgs();
 
-        Object[] args = joinPoint.getArgs();
-
-        for (Object arg : args) {
-            logger.info("==>>> argument: " + arg);
+            for (Object arg : args) {
+                logger.info("==>>> argument: " + arg);
+            }
         }
     }
 
@@ -48,11 +53,12 @@ public class LoggingAspect {
             pointcut = "forAppFlow()",
             returning = "result")
     public void afterReturning(JoinPoint joinPoint, Object result) {
+        if (loggingEnabled) {
+            String method = joinPoint.getSignature().toShortString();
+            logger.info("@AfterReturning: from method: " + method);
 
-        String method = joinPoint.getSignature().toShortString();
-        logger.info("@AfterReturning: from method: " + method);
-
-        logger.info("==>>> result: " + result);
+            logger.info("==>>> result: " + result);
+        }
     }
 
 }

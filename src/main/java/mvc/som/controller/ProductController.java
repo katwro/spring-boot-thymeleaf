@@ -1,22 +1,20 @@
 package mvc.som.controller;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import mvc.som.entity.Product;
+import mvc.som.service.OrderService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import mvc.som.entity.Product;
-import mvc.som.service.OrderService;
 
 import java.util.List;
 
 @Controller
 @RequestMapping("/product")
-public class ProductController {
+public class ProductController extends BaseController {
 
     private OrderService orderService;
 
@@ -24,15 +22,14 @@ public class ProductController {
         this.orderService = orderService;
     }
 
-    @InitBinder
-    public void initBinder(WebDataBinder webDataBinder) {
-        StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
-        webDataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
-    }
-
     @GetMapping("/list")
-    public String showProductList(Model model) {
-        List<Product> products = orderService.findAllProducts();
+    public String showProductList(@RequestParam(value = "searchTerm", required = false) String searchTerm, Model model) {
+        List<Product> products;
+        if (searchTerm != null && !searchTerm.isEmpty()) {
+            products = orderService.searchProduct(searchTerm);
+        } else {
+            products = orderService.findAllProducts();
+        }
         model.addAttribute("products", products);
         return "products/product-list";
     }
@@ -69,7 +66,7 @@ public class ProductController {
             orderService.deleteProductById(id);
             redirectAttributes.addFlashAttribute("success", "The product has been deleted.");
         } catch (DataIntegrityViolationException exc) {
-            redirectAttributes.addFlashAttribute("error", "The product cannot be deleted. Check if it has already been assigned to the order.");
+            redirectAttributes.addFlashAttribute("error", "Deletion of the product is not allowed. Verify if it has been assigned to any order.");
         }
         return "redirect:/product/list";
     }

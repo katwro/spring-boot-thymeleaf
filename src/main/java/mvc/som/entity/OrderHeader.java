@@ -40,6 +40,14 @@ public class OrderHeader {
         this.orderDetails = new ArrayList<>();
     }
 
+    @Override
+    public String toString() {
+        return "OrderHeader{" +
+                "id=" + id +
+                ", number='" + number + '\'' +
+                ", date=" + date +
+                '}';
+    }
 
 }
 

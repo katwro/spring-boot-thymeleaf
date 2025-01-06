@@ -10,6 +10,7 @@
 <body>
 
 <div class="container">
+    <br>
     <h3>Product details</h3>
     <hr>
 
@@ -49,6 +50,9 @@
     <a th:href="@{/product/list}">Back to product list</a>
     <br>
     <a th:href="@{/}">Home page</a>
+    <form action="#" th:action="@{/logout}" method="POST">
+        <input class="nav-link" type="submit" value="Logout"/>
+    </form>
 </div>
 </body>
 </html>

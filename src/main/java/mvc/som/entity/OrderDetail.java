@@ -21,7 +21,7 @@ public class OrderDetail {
     private int quantity;
 
     @Column(name = "UnitValue")
-    private double value;
+    private double unitPrice;
 
     @ManyToOne
     @JoinColumn(name = "OrderID")
@@ -30,6 +30,15 @@ public class OrderDetail {
     @ManyToOne
     @JoinColumn(name = "ProductID")
     private Product product;
+
+    @Override
+    public String toString() {
+        return "OrderDetail{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", unitPrice=" + unitPrice +
+                '}';
+    }
 
 }
 

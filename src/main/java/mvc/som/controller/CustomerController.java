@@ -1,21 +1,19 @@
 package mvc.som.controller;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import mvc.som.entity.Customer;
+import mvc.som.service.OrderService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import mvc.som.entity.Customer;
-import mvc.som.service.OrderService;
 
 import java.util.List;
 
 @Controller
 @RequestMapping("/customer")
-public class CustomerController {
+public class CustomerController extends BaseController{
 
     private OrderService orderService;
 
@@ -23,15 +21,14 @@ public class CustomerController {
         this.orderService = orderService;
     }
 
-    @InitBinder
-    public void initBinder(WebDataBinder webDataBinder) {
-        StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
-        webDataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
-    }
-
     @GetMapping("/list")
-    public String showCustomerList(Model model) {
-        List<Customer> customers = orderService.findAllCustomers();
+    public String showCustomerList(@RequestParam(value = "searchTerm", required = false) String searchTerm, Model model) {
+        List<Customer> customers;
+        if (searchTerm != null && !searchTerm.isEmpty()) {
+            customers = orderService.searchCustomer(searchTerm);
+        } else {
+            customers = orderService.findAllCustomers();
+        }
         model.addAttribute("customers", customers);
         return "customers/customer-list";
     }

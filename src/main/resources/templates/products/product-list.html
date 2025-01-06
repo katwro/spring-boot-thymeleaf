@@ -10,7 +10,8 @@
 </head>
 <body>
 <div class="container">
-    <h2>PRODUCTS</h2>
+    <br>
+    <h2>Products</h2>
 
     <div th:if="${error}" th:text="${error}" class="alert alert-danger"></div>
     <div th:if="${success}" th:text="${success}" class="alert alert-success"></div>
@@ -24,6 +25,11 @@
        class="btn btn-secondary btn-sm mb-3">
         Back
     </a>
+
+    <form th:action="@{/product/list}" method="GET">
+        <input th:value="${searchTerm}" placeholder="Enter search term..." size="50" type="text" name="searchTerm">
+        <button class="btn btn-primary btn-sm mb-1" type="submit">Search</button>
+    </form>
 
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
@@ -56,6 +62,9 @@
     <hr>
 
     <a th:href="@{/}">Home page</a>
+    <form action="#" th:action="@{/logout}" method="POST">
+        <input class="nav-link" type="submit" value="Logout"/>
+    </form>
 </div>
 </body>
 </html>

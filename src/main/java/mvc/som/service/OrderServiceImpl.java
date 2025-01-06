@@ -36,6 +36,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Customer> searchCustomer(String searchTerm) {
+        return customerRepository.searchCustomers(searchTerm);
+    }
+
+    @Override
     public List<OrderHeader> findAllOrders() {
         return orderHeaderRepository.findAllByOrderByNumberDesc();
     }
@@ -48,6 +53,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Product> findAllProducts() {
         return productRepository.findAllByOrderByName();
+    }
+
+    @Override
+    public List<Product> searchProduct(String searchTerm) {
+        return productRepository.findByNameContainingIgnoreCaseOrProductIndexContainingIgnoreCase(
+                searchTerm,searchTerm);
     }
 
     @Override
@@ -78,7 +89,6 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
-
     @Override
     public Product findProductById(int id) {
         Optional<Product> result = productRepository.findById(id);
@@ -98,6 +108,7 @@ public class OrderServiceImpl implements OrderService {
         if (customer.getNumber() == 0) {
             customer.setNumber(customerRepository.generateCustomerNumber());
         }
+        customer.setPhone(customer.getPhone().replaceAll("\\D", ""));
         customerRepository.save(customer);
     }
 
@@ -109,7 +120,7 @@ public class OrderServiceImpl implements OrderService {
 
                 Product product = orderDetail.getProduct();
                 if (product != null) {
-                    orderDetail.setValue(product.getPrice());
+                    orderDetail.setUnitPrice(product.getPrice());
                 }
                 orderDetail.setOrderHeader(order);
             }
